@@ -13,20 +13,20 @@ jobs:
 
     strategy:
       matrix:
-        os: [ubuntu-latest]
+        os: [windows-latest]
         python-version: [3.7]
 
     steps:
-      - uses: "actions/checkout@v2"
-      - uses: actions/cache@v2
-        if: startsWith(runner.os, 'Linux')
-        with:
-          path: |
-            /home/runner/conda_pkgs_dir
-
-          key: ${{ runner.os }}-conda-${{ hashFiles('c3dev-environment.yml') }}
-          restore-keys: |
-            ${{ runner.os }}-conda-
+#      - uses: "actions/checkout@v2"
+#      - uses: actions/cache@v2
+#        if: startsWith(runner.os, 'Linux')
+#        with:
+#          path: |
+#            /home/runner/conda_pkgs_dir
+#
+#          key: ${{ runner.os }}-conda-${{ hashFiles('c3dev-environment.yml') }}
+#          restore-keys: |
+#            ${{ runner.os }}-conda-
 
 
 
