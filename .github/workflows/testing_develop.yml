@@ -13,40 +13,31 @@ jobs:
 
     strategy:
       matrix:
-        os: [windows-latest]
-        python-version: [3.7]
+        os: [macos-latest, ubuntu-latest, windows-latest]
+        python-version: [3.6, 3.7, 3.8]
 
     steps:
       - uses: "actions/checkout@v2"
-#      - uses: actions/cache@v2
-#        if: startsWith(runner.os, 'Linux')
-#        with:
-#          path: |
-#            /home/runner/conda_pkgs_dir
-#
-#          key: ${{ runner.os }}-conda-${{ hashFiles('c3dev-environment.yml') }}
-#          restore-keys: |
-#            ${{ runner.os }}-conda-
+      - uses: actions/cache@v2
+        if: startsWith(runner.os, 'macOS')
+        with:
+          path: /Users/runner/conda_pkgs_dir
+          key: ${{ runner.os }}-conda-${{ hashFiles('c3dev-environment.yml') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
 
-
-
-
-#      - uses: actions/cache@v2
-#        if: startsWith(runner.os, 'macOS')
-#        with:
-#          path: ~/Library/Caches/conda
-#          key: ${{ runner.os }}-conda-${{ hashFiles('c3dev-environment.yml') }}
-#          restore-keys: |
-#            ${{ runner.os }}-pip-
+      - uses: actions/cache@v2
+        if: startsWith(runner.os, 'Linux')
+        with:
+          path: /home/runner/conda_pkgs_dir
+          key: ${{ runner.os }}-conda-${{ hashFiles('c3dev-environment.yml') }}
+          restore-keys: |
+            ${{ runner.os }}-conda-
 
       - uses: actions/cache@v2
         if: startsWith(runner.os, 'Windows')
         with:
-          path: |
-            C:\Users\runneradmin\conda_pkgs_dir
-            C:\Miniconda\envs
-            C:\Users\runneradmin\.conda\envs
-            C:\Users\runneradmin\AppData\Local\conda\conda\envs
+          path: C:\Users\runneradmin\conda_pkgs_dir
           key: ${{ runner.os }}-pip-${{ hashFiles('c3dev-environment.yml') }}
           restore-keys: |
             ${{ runner.os }}-pip-
@@ -54,7 +45,6 @@ jobs:
       - uses: "actions/setup-python@v1"
         with:
           python-version: "${{ matrix.python-version }}"
-
 
       - name: Make conda environment
         uses: goanpeca/setup-miniconda@v1
@@ -70,15 +60,15 @@ jobs:
           conda info
           conda list
 
-#      - name: "Run tox targets for ${{ matrix.python-version }}"
-#        shell: bash -l {0}
-#        run: |
-#          conda activate c3dev
-#          python -m tox
-#          ls
-#          ls tests
-#      - name: Upload coverage to Codecov
-#        uses: codecov/codecov-action@v1
-#        with:
-#          file: ./tests/junit-*.xml
-#          fail_ci_if_error: true
+      - name: "Run tox targets for ${{ matrix.python-version }}"
+        shell: bash -l {0}
+        run: |
+          conda activate c3dev
+          python -m tox
+          ls
+          ls tests
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1
+        with:
+          file: ./tests/junit-*.xml
+          fail_ci_if_error: true
