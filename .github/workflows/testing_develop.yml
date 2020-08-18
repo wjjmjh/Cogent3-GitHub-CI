@@ -41,7 +41,11 @@ jobs:
       - uses: actions/cache@v2
         if: startsWith(runner.os, 'Windows')
         with:
-          path: C:\Users\runneradmin\conda_pkgs_dir
+          path: |
+            C:\Users\runneradmin\conda_pkgs_dir
+            C:\Miniconda\envs
+            C:\Users\runneradmin\.conda\envs
+            C:\Users\runneradmin\AppData\Local\conda\conda\envs
           key: ${{ runner.os }}-pip-${{ hashFiles('c3dev-environment.yml') }}
           restore-keys: |
             ${{ runner.os }}-pip-
