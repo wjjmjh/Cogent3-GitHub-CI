@@ -13,8 +13,8 @@ jobs:
 
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-latest, windows-latest]
-        python-version: [3.6, 3.7, 3.8]
+        os: [windows-latest]
+        python-version: [3.7]
 
     steps:
       - uses: "actions/checkout@v2"
@@ -28,22 +28,42 @@ jobs:
            activate-environment: c3dev
            environment-file: c3dev-environment.yml
            python-version: "${{ matrix.python-version }}"
-
-      - name: "Display conda env for ${{ matrix.python-version }}"
-        shell: bash -l {0}
+      - name: Bash
+          shell: bash -l {0}
+          run: |
+            conda info
+            conda list
+      - name: PowerShell
+        shell: powershell
         run: |
-          conda activate 
           conda info
           conda list
-      - name: "Run tox targets for ${{ matrix.python-version }}"
-        shell: bash -l {0}
+      - name: PowerShell Core
+        shell: pwsh
         run: |
-          conda activate c3dev
-          python -m tox
-          ls
-          ls tests
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v1
-        with:
-          file: ./tests/junit-*.xml
-          fail_ci_if_error: true
+          conda info
+          conda list
+      - name: Cmd.exe
+        shell: cmd /C CALL {0}
+        run: >-
+          conda info &&
+          conda list
+
+#      - name: "Display conda env for ${{ matrix.python-version }}"
+#        shell: bash -l {0}
+#        run: |
+#          conda activate
+#          conda info
+#          conda list
+#      - name: "Run tox targets for ${{ matrix.python-version }}"
+#        shell: bash -l {0}
+#        run: |
+#          conda activate c3dev
+#          python -m tox
+#          ls
+#          ls tests
+#      - name: Upload coverage to Codecov
+#        uses: codecov/codecov-action@v1
+#        with:
+#          file: ./tests/junit-*.xml
+#          fail_ci_if_error: true
