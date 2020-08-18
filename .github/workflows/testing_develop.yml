@@ -59,15 +59,15 @@ jobs:
           conda activate
           conda info
           conda list
-      - name: "Run tox targets for ${{ matrix.python-version }}"
-        shell: bash -l {0}
-        run: |
-          conda activate c3dev
-          python -m tox
-          ls
-          ls tests
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v1
-        with:
-          file: ./tests/junit-*.xml
-          fail_ci_if_error: true
+#      - name: "Run tox targets for ${{ matrix.python-version }}"
+#        shell: bash -l {0}
+#        run: |
+#          conda activate c3dev
+#          python -m tox
+#          ls
+#          ls tests
+#      - name: Upload coverage to Codecov
+#        uses: codecov/codecov-action@v1
+#        with:
+#          file: ./tests/junit-*.xml
+#          fail_ci_if_error: true
