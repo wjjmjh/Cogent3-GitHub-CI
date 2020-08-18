@@ -24,6 +24,7 @@ jobs:
           path: |
             ~/miniconda3/pkgs
             ~/.conda/pkgs
+
           key: ${{ runner.os }}-conda-${{ hashFiles('c3dev-environment.yml') }}
           restore-keys: |
             ${{ runner.os }}-conda-
