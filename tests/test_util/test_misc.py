@@ -550,9 +550,9 @@ class UtilsTests(TestCase):
             with zipfile.ZipFile(filename, "w") as zip:
                 zip.write(zipped)
             got = open_(filename)
-            self.assertEqual(bytes_to_string(got.readline()), "any str")
+            content = got.readline()
+            self.assertEqual(bytes_to_string(content), "any str")
 
-        with TemporaryDirectory(dir=".") as dirname:
             zipped = os.path.join(dirname, "bar.txt")
             filename = os.path.join(dirname, "bar.txt.zip")
             with open(zipped, "w") as f:
@@ -560,7 +560,8 @@ class UtilsTests(TestCase):
             with zipfile.ZipFile(filename, "w") as zip:
                 zip.write(zipped)
             got = open_(filename)
-            self.assertEqual(bytes_to_string(got.readline()), "any str")
+            content = got.readline()
+            self.assertEqual(bytes_to_string(content), "any str")
 
     def test_get_setting_from_environ(self):
         """correctly recovers environment variables"""
