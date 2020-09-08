@@ -542,28 +542,29 @@ class UtilsTests(TestCase):
         self.assertTrue(path_exists(__file__))
 
     def test_open_zipped_file(self):
-        with TemporaryDirectory(dir=".") as dirname:
-            zipped = os.path.join(dirname, "foo.txt")
-            filename = os.path.join(dirname, "foo.zip")
-            with open(zipped, "w") as f:
-                f.write("any str")
-            with zipfile.ZipFile(filename, "w") as zip:
-                zip.write(zipped)
-            got = open_(filename)
-            content = got.readline()
-            print(bytes_to_string(content))
-            # self.assertEqual(bytes_to_string(content), "any str")
+        dirname = "."
+        zipped = os.path.join(dirname, "foo.txt")
+        filename = os.path.join(dirname, "foo.zip")
+        with open(zipped, "w") as f:
+            f.write("any str")
+        with zipfile.ZipFile(filename, "w") as zip:
+            zip.write(zipped)
+        got = open_(filename)
+        content = got.readline()
+        print(bytes_to_string(content))
+        self.assertEqual(bytes_to_string(content), "any str")
 
-            zipped = os.path.join(dirname, "bar.txt")
-            filename = os.path.join(dirname, "bar.txt.zip")
-            with open(zipped, "w") as f:
-                f.write("any str")
-            with zipfile.ZipFile(filename, "w") as zip:
-                zip.write(zipped)
-            got = open_(filename)
-            content = got.readline()
-            print(bytes_to_string(content))
-            # self.assertEqual(bytes_to_string(content), "any str")
+        zipped = os.path.join(dirname, "bar.txt")
+        filename = os.path.join(dirname, "bar.txt.zip")
+        with open(zipped, "w") as f:
+            f.write("any str")
+        with zipfile.ZipFile(filename, "w") as zip:
+            zip.write(zipped)
+        got = open_(filename)
+        content = got.readline()
+        print(bytes_to_string(content))
+        self.assertEqual(bytes_to_string(content), "any str")
+
 
     def test_get_setting_from_environ(self):
         """correctly recovers environment variables"""
