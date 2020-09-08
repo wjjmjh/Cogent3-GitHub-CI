@@ -543,23 +543,33 @@ class UtilsTests(TestCase):
 
     def test_open_zipped_file(self):
         with TemporaryDirectory(dir=".") as dirname:
-            zipped = os.path.join(dirname, "foo.txt")
+            zipped1 = os.path.join(dirname, "foo.txt")
             filename = os.path.join(dirname, "foo.zip")
-            with open(zipped, "w") as f:
+            with open(zipped1, "w") as f:
                 f.write("any str")
             with zipfile.ZipFile(filename, "w") as zip:
-                zip.write(zipped)
+                zip.write(zipped1)
             got = open_(filename)
-            content1 = bytes_to_string(got.readline())
+            self.assertEqual(
+                bytes_to_string(bytes_to_string(got.readline())), "any str"
+            )
 
+            zipped2 = os.path.join(dirname, "bar.txt")
             filename = os.path.join(dirname, "bar.txt.zip")
+            with open(zipped2, "w") as f:
+                f.write("any str")
             with zipfile.ZipFile(filename, "w") as zip:
-                zip.write(zipped)
+                zip.write(zipped2)
             got = open_(filename)
-            content2 = bytes_to_string(got.readline())
-        self.assertEqual(bytes_to_string(content1), "any str")
-        self.assertEqual(bytes_to_string(content2), "any str")
+            self.assertEqual(
+                bytes_to_string(bytes_to_string(got.readline())), "any str"
+            )
 
+            # tests when archive has > 1 record
+            with zipfile.ZipFile(filename, "a") as zip:
+                zip.write(zipped1)
+            with self.assertRaises(ValueError):
+                open_(filename)
 
     def test_get_setting_from_environ(self):
         """correctly recovers environment variables"""

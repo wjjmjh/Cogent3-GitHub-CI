@@ -132,10 +132,17 @@ def bytes_to_string(data):
 
 
 def zip_open(filename, mode="r", **kwargs):
-    """open a zip-compressed file"""
+    """open a zip-compressed file
+
+    Note
+    ----
+    Raises ValueError if archive has > 1 record
+    """
     if mode == "rt":
         mode = "r"
     with ZipFile(filename) as zf:
+        if len(zf.namelist()) != 1:
+            raise ValueError("Archive is supposed to have only one record.")
         return zf.open(zf.namelist()[0], mode, **kwargs)
 
 
