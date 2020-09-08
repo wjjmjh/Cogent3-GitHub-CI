@@ -549,10 +549,10 @@ class UtilsTests(TestCase):
                 f.write("any str")
             with zipfile.ZipFile(filename, "w") as zip:
                 zip.write(zipped1)
-            got = open_(filename)
-            self.assertEqual(
-                bytes_to_string(bytes_to_string(got.readline())), "any str"
-            )
+            with open_(filename) as got:
+                self.assertEqual(
+                    bytes_to_string(bytes_to_string(got.readline())), "any str"
+                )
 
             zipped2 = os.path.join(dirname, "bar.txt")
             filename = os.path.join(dirname, "bar.txt.zip")
@@ -560,10 +560,10 @@ class UtilsTests(TestCase):
                 f.write("any str")
             with zipfile.ZipFile(filename, "w") as zip:
                 zip.write(zipped2)
-            got = open_(filename)
-            self.assertEqual(
-                bytes_to_string(bytes_to_string(got.readline())), "any str"
-            )
+            with open_(filename) as got:
+                self.assertEqual(
+                    bytes_to_string(bytes_to_string(got.readline())), "any str"
+                )
 
             # tests when archive has > 1 record
             with zipfile.ZipFile(filename, "a") as zip:
