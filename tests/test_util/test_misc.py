@@ -542,28 +542,23 @@ class UtilsTests(TestCase):
         self.assertTrue(path_exists(__file__))
 
     def test_open_zipped_file(self):
-        dirname = "."
-        zipped = os.path.join(dirname, "foo.txt")
-        filename = os.path.join(dirname, "foo.zip")
-        with open(zipped, "w") as f:
-            f.write("any str")
-        with zipfile.ZipFile(filename, "w") as zip:
-            zip.write(zipped)
-        got = open_(filename)
-        content = got.readline()
-        print(bytes_to_string(content))
-        self.assertEqual(bytes_to_string(content), "any str")
+        with TemporaryDirectory(dir=".") as dirname:
+            zipped = os.path.join(dirname, "foo.txt")
+            filename = os.path.join(dirname, "foo.zip")
+            with open(zipped, "w") as f:
+                f.write("any str")
+            with zipfile.ZipFile(filename, "w") as zip:
+                zip.write(zipped)
+            got = open_(filename)
+            content1 = bytes_to_string(got.readline())
 
-        zipped = os.path.join(dirname, "bar.txt")
-        filename = os.path.join(dirname, "bar.txt.zip")
-        with open(zipped, "w") as f:
-            f.write("any str")
-        with zipfile.ZipFile(filename, "w") as zip:
-            zip.write(zipped)
-        got = open_(filename)
-        content = got.readline()
-        print(bytes_to_string(content))
-        self.assertEqual(bytes_to_string(content), "any str")
+            filename = os.path.join(dirname, "bar.txt.zip")
+            with zipfile.ZipFile(filename, "w") as zip:
+                zip.write(zipped)
+            got = open_(filename)
+            content2 = bytes_to_string(got.readline())
+        self.assertEqual(bytes_to_string(content1), "any str")
+        self.assertEqual(bytes_to_string(content2), "any str")
 
 
     def test_get_setting_from_environ(self):
